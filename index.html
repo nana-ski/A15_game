@@ -926,7 +926,8 @@
 
             function getCanvasX(e) {
                 const rect = canvasEl.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const pointer = e.touches?.[0] || e.changedTouches?.[0] || e;
+                const clientX = pointer.clientX;
                 return (clientX - rect.left) * (CANVAS_WIDTH / rect.width);
             }
 
@@ -963,9 +964,9 @@
 
             canvasEl.addEventListener('click', handleDrop);
             canvasEl.addEventListener('touchend', (e) => {
-                handleDrop(e);
                 e.preventDefault();
-            });
+                handleDrop(e);
+            }, { passive: false });
 
             document.getElementById('restartHeaderBtn').addEventListener('click', resetGame);
             document.getElementById('restartBtn').addEventListener('click', resetGame);
